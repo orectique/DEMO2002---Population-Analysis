@@ -117,6 +117,7 @@ PY <- (data$Pt2 + data$Pt1)/2
   #### data presentation ####
 
 barplot(CBR,names.arg = data$Country,col=c(1:3))
+  title(main = "Crude Birth Rate", xlab = "Country", ylab = "Crude Birth Rate")
 
 #### recap! ####
 
