@@ -18,7 +18,7 @@
 
 #### data preparation ####
 
-Mx<-read.table("CANasfrRR.txt", header = TRUE, skip = 2)
+Mx<-read.table("../Assignment 1/DNKasfrRR.txt", header = TRUE, skip = 2)
 
 # when reading this data, how do we take off the title?
 # How do we handle the column names, and empty cell?
