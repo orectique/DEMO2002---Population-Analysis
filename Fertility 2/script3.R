@@ -11,7 +11,7 @@ library(ggplot2)
 #### data preparation ####
 
 # complete by yourself
-Mx<-read.table("../Assignment 1/DNKasfrRR.txt", header = TRUE, skip = 2) 
+Mx<-read.table("ITAasfrRR.txt", header = TRUE, skip = 2) 
 
 # complete by yourself
 Mx$Age[Mx$Age=="12-"] <- "12"
@@ -53,7 +53,7 @@ ggplot(TFR,aes(x=Year,y=TFR))+geom_line()
 
 #### Period & Cohort Comparison ####
 
-Mx2<-read.table("../Assignment 1/DNKasfrVV.txt", skip = 2, header = T)
+Mx2<-read.table("ITAasfrVV.txt", skip = 2, header = T)
 
 # you can do this!
 Mx2$ARDY[Mx2$ARDY=="12-"] <- "12"
@@ -68,24 +68,30 @@ Mx2$Cohort <- as.numeric(Mx2$Cohort)
 
 #### We are gonna look at the Cohort TFR ####
 
-Year2 <- 1916:2021
+Year2 <- 1954:2019
 
 CTFR <- c()
+MAC <- c()
 
 for (i in Year2) {
   Fx <- Mx2[Mx2$Cohort==i,]
   #again how to calculate TFR?
   ctfr<- sum(Fx$ASFR)
   CTFR <- c(CTFR,ctfr)
+  
+  mac <- sum((Fx$ARDY + 0.5) * Fx$ASFR) / sum(Fx$ASFR)
+  print(mac)
+  MAC <- c(MAC, mac)
 }
 
-CTFR <- data.frame(Year=1916:2021,CTFR=CTFR)
+CTFR <- data.frame(Year=1954:2019,CTFR=CTFR, MAC=MAC)
 
 #### Plotting time! ####
 
 ggplot(TFR,aes(x=Year,y=TFR,color="Period"))+
   geom_line()+
   # we have two data so we need to add a new data to plot. 
-  geom_line(CTFR,mapping=aes(x=Year,y=CTFR,color="Cohort"))+
-  scale_color_manual(values = c("navy","red"))
+  geom_line(CTFR,mapping=aes(x=Year + 29,y=CTFR,color="Cohort"))+
+  scale_color_manual(values = c("navy","red", "green")) + 
+  ggtitle("Year Vs. Total Fertility Rate - Italy (1954-2019)")
 

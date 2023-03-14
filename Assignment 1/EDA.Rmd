@@ -1,0 +1,48 @@
+---
+title: "Denmark EDA"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+```
+
+
+
+```{r}
+asfr = read.table('DNKasfrRR.txt', skip = 2, header = T)
+cbr = read.table('DNKcbrRRbo.txt', skip = 2, header = T)
+mab = read.table('DNKmabRRbo.txt', skip = 2, header = T)
+tfr = read.table('DNKtfrRRbo.txt', skip = 2, header = T)
+expRisk = read.table('exposureRiskMortality.txt', skip = 2, header = T)
+```
+
+```{r}
+asfr$Age <- gsub("[+]", "", asfr$Age)
+asfr$Age <- gsub("[-]", "", asfr$Age)
+
+expRisk$Age <- gsub("[+]", "", expRisk$Age)
+expRisk$Age <- gsub("[-]", "", expRisk$Age)
+```
+```{r}
+ggplot(mab) + 
+  geom_line(mapping = aes(x=Year, y = MAB, color = "MAB")) + 
+  geom_line(mapping = aes(x=Year, y = MAB1, color = "MAB1")) +
+  geom_line(mapping = aes(x=Year, y = MAB2, color = "MAB2")) +
+  geom_line(mapping = aes(x=Year, y = MAB3, color = "MAB3")) +
+  geom_line(mapping = aes(x=Year, y = MAB4, color = "MAB4")) +
+  geom_line(mapping = aes(x=Year, y = MAB5p, color = "MAB5p"))
+
+```
+
+
+```{r}
+ggplot() + 
+  #geom_line(tfr, mapping = aes(x=Year, y = TFR, color = "TFR")) + 
+  geom_line(tfr, mapping = aes(x=Year, y = TFR1, color = "TFR1")) + 
+  geom_line(tfr, mapping = aes(x=Year, y = TFR2, color = "TFR2")) + 
+  geom_line(tfr, mapping = aes(x=Year, y = TFR3, color = "TFR3")) + 
+  geom_line(tfr, mapping = aes(x=Year, y = TFR4, color = "TFR4")) + 
+  geom_line(tfr, mapping = aes(x=Year, y = TFR5p, color = "TFR5p")) 
+```
+
