@@ -68,7 +68,7 @@ Mx2$Cohort <- as.numeric(Mx2$Cohort)
 
 #### We are gonna look at the Cohort TFR ####
 
-Year2 <- 1954:2019
+Year2 <- 1942:1964
 
 CTFR <- c()
 MAC <- c()
@@ -84,7 +84,7 @@ for (i in Year2) {
   MAC <- c(MAC, mac)
 }
 
-CTFR <- data.frame(Year=1954:2019,CTFR=CTFR, MAC=MAC)
+CTFR <- data.frame(Year=1942:1964,CTFR=CTFR, MAC=MAC)
 
 #### Plotting time! ####
 

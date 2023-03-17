@@ -1,0 +1,11 @@
+---
+title: "DEMO2002 - Tutorial 4"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+![Visualising trends in life expectancy, Italy (1921-2020)](CANlx.png)
+```{r}
+```
+The above plot presents the number of survivors at a certain age in Canada, relative to the initial value of 10000. It is observed that from the mid 20th century, there is a marked decrease in the number of the juvenile deaths - i.e. more persons survive past childhood. Additionally, it is seen that the individual plots gradually shift right, indicating an improvement in general life expectancy.
