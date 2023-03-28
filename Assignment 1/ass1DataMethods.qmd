@@ -6,14 +6,14 @@ editor: visual
 ---
 
 ```{r}
-#| echo: false
 library(ggplot2)
+library(ggpubr)
+options(scipen = 1000)
 ```
 
 ## Life Expectancy at Birth
 
 ```{r}
-#| echo: false
 DNK <- read.table('DNKexpPer.txt', skip = 2, header = T) 
 SWE <- read.table('SWEexpPer.txt', skip = 2, header = T) 
 FIN <- read.table('FINexpPer.txt', skip = 2, header = T) 
@@ -22,7 +22,6 @@ NOR <- read.table('NORexpPer.txt', skip = 2, header = T)
 ```
 
 ```{r}
-#| echo: false
 ggplot() + 
   geom_line(data = DNK, mapping = aes(x = Year, y = Total, color = "Denmark")) + 
   geom_line(data = ISL, mapping = aes(x = Year, y = Total, color = "Iceland")) + 
@@ -35,7 +34,6 @@ ggplot() +
 ```
 
 ```{r}
-#| echo: false
 start = 1878
 end = 2020
 
@@ -47,7 +45,6 @@ NOR <- NOR[NOR$Year >= 1878 & NOR$Year <= 2020,]
 ```
 
 ```{r}
-#| echo: false
 Nord = data.frame(Year = 1878:2020,
                   Denmark = DNK$Total, 
                   Finland = FIN$Total, 
@@ -60,7 +57,6 @@ Nord$AvgExclude <- (Nord$Finland + Nord$Iceland + Nord$Norway + Nord$Sweden)/4
 ```
 
 ```{r}
-#| echo: false
 ggplot(data = Nord) + 
   geom_line(mapping = aes(x = Year, y = Denmark, color = "Denmark")) + 
   geom_line(mapping = aes(x = Year, y = Avg, color = "Nordic Average")) + 
@@ -74,7 +70,6 @@ ggplot(data = Nord) +
 #### 5 year moving average decomposition - Denmark
 
 ```{r}
-#| echo: false
 DNKSeries <- ts(data = Nord$Denmark, start = 1, end = 28.6, frequency = 5)
 
 decompDNK <- decompose(DNKSeries)
@@ -85,7 +80,6 @@ plot(decompDNK)
 #### 5 year moving average decomposition - Nordic Average
 
 ```{r}
-#| echo: false
 NordSeries <- ts(data = Nord$AvgExclude, start = 1, end = 28.6, frequency = 5)
 
 decompNord <- decompose(NordSeries)
@@ -96,13 +90,11 @@ plot(decompNord)
 ## Male vs Female life expectancy
 
 ```{r}
-#| echo: false
 Nord$MaleAvg <- (DNK$Male + NOR$Male + ISL$Male + SWE$Male + FIN$Male)/5
 Nord$FemaleAvg <- (DNK$Female + NOR$Female + ISL$Female + SWE$Female + FIN$Female)/5
 ```
 
 ```{r}
-#| echo: false
 ggplot() + 
   geom_line(data = DNK, mapping = aes(x = Year, y = Male, color = "Denmark (Male)")) + 
   geom_line(data = DNK, mapping = aes(x = Year, y = Female, color = "Denmark (Female)")) + 
@@ -112,10 +104,27 @@ ggplot() +
   ggtitle("Life Expectancy, Male vs. Female, Period Data (1878 - 2020)")
 ```
 
+```{r}
+ggplot(data = Nord) + 
+  geom_line(data = DNK, mapping = aes(x = Year, y = Male, color = "Denmark (Male)")) + 
+  geom_line(data = Nord, mapping = aes(x = Year, y = MaleAvg, color = "Nordic Average (Male)")) + 
+  geom_line(data = Nord, mapping = aes(x = Year, y = Avg, color = "Nordic Average (Complete)")) + 
+  labs(colour = "Region") + theme_bw() + 
+  ggtitle("Life Expectancy at Birth, Period Data (1878 - 2020)")
+```
+
+```{r}
+ggplot() + 
+  geom_line(data = DNK, mapping = aes(x = Year, y = Female, color = "Denmark (Female)")) + 
+  geom_line(data = Nord, mapping = aes(x = Year, y = FemaleAvg, color = "Nordic Average (Female)")) + 
+  geom_line(data = Nord, mapping = aes(x = Year, y = Avg, color = "Nordic Average (Complete)")) + 
+  labs(colour = "Region") + theme_bw() + 
+  ggtitle("Life Expectancy at Birth, Period Data (1878 - 2020)")
+```
+
 ## Difference in Male - Female life expectancy at birth
 
 ```{r}
-#| echo: false
 Nord$DNKDiff <- - DNK$Male + DNK$Female
 Nord$SWEDiff <- - SWE$Male + SWE$Female
 Nord$ISLDiff <- - ISL$Male + ISL$Female
@@ -127,10 +136,141 @@ Nord$DiffAvgExclude <- (Nord$NORDiff + Nord$ISLDiff + Nord$FINDiff + Nord$SWEDif
 ```
 
 ```{r}
-#| echo: false
 ggplot(data = Nord) + 
   geom_line(mapping = aes(x = Year, y = DNKDiff, color = "Denmark")) + 
   geom_line(mapping = aes(x = Year, y = DiffAvg, color = "Nordic Average")) + 
   labs(colour = "Region") + theme_bw() + 
   ggtitle("Difference in Life Expectancy (Female - Male), Period Data (1878 - 2020)")
+```
+
+## Survival Functions
+
+```{r}
+LTm<-read.table("mltper_1x1.txt", skip = 2, header = T) 
+LTf<-read.table("fltper_1x1.txt", skip = 2, header = T) 
+LTb<-read.table("bltper_1x1.txt", skip = 2, header = T) 
+
+clean <- function(LT){
+  LT$Age[LT$Age == "110+"] <- 110
+  LT$Age <- as.numeric(LT$Age)
+  LT$Year <- as.numeric(LT$Year)
+
+  LT <- LT[LT$Year %in% seq(1880, 2020, 40),]
+  
+  return(LT)
+}
+
+LTm <- clean(LTm)
+LTf <- clean(LTf)
+LTb <- clean(LTb)
+
+LifeTable<-function(qx){
+  
+  lx<-100000
+  
+  px<-1-qx
+  
+  for(y in 1:110){
+    lx[y+1]<- lx[y] * px[y]
+  }
+  
+  dx <- lx*qx
+  
+  Age<-0:110
+  
+  ALL<-data.frame(Age = Age, qx = qx,
+                  lx = lx,dx = dx)
+  
+  return(ALL)
+}
+```
+
+```{r}
+dnk1880 <- ggplot() + 
+  geom_line(data = LTm[LTm$Year == 1880,], mapping = aes(x = Age, y = lx, color = "Male")) + 
+  geom_line(data = LTf[LTf$Year == 1880,], mapping = aes(x = Age, y = lx, color = "Female")) + 
+  geom_line(data = LTb[LTb$Year == 1880,], mapping = aes(x = Age, y = lx, color = "Complete")) + theme(legend.position = "none") + ggtitle(" ")
+  #ggtitle("Survival Function, Denmark (1880)") 
+
+dnk1920 <- ggplot() + 
+  geom_line(data = LTm[LTm$Year == 1920,], mapping = aes(x = Age, y = lx, color = "Male")) + 
+  geom_line(data = LTf[LTf$Year == 1920,], mapping = aes(x = Age, y = lx, color = "Female")) + 
+  geom_line(data = LTb[LTb$Year == 1920,], mapping = aes(x = Age, y = lx, color = "Complete")) + theme(legend.position = "none") + ggtitle(" ")
+  #ggtitle("Survival Function, Denmark (1920)") 
+
+dnk1960 <- ggplot() + 
+  geom_line(data = LTm[LTm$Year == 1960,], mapping = aes(x = Age, y = lx, color = "Male")) + 
+  geom_line(data = LTf[LTf$Year == 1960,], mapping = aes(x = Age, y = lx, color = "Female")) + 
+  geom_line(data = LTb[LTb$Year == 1960,], mapping = aes(x = Age, y = lx, color = "Complete")) + theme(legend.position = "none") + ggtitle(" ")
+  #ggtitle("Survival Function, Denmark (1960)") 
+
+dnk2000 <- ggplot() + 
+  geom_line(data = LTm[LTm$Year == 2000,], mapping = aes(x = Age, y = lx, color = "Male")) + 
+  geom_line(data = LTf[LTf$Year == 2000,], mapping = aes(x = Age, y = lx, color = "Female")) + 
+  geom_line(data = LTb[LTb$Year == 2000,], mapping = aes(x = Age, y = lx, color = "Complete")) + theme(legend.position = "none") + ggtitle(" ")
+  #ggtitle("Survival Function, Denmark (2000)") 
+
+ggarrange(dnk1880, dnk1920, dnk1960, dnk2000, nrow = 2, ncol = 2, common.legend = TRUE, labels = c(1880, 1920, 1960, 2000), hjust = -1, font.label= c(size = 9), legend = "bottom")
+```
+
+```{r}
+ggplot(data = LTf) + 
+  geom_line(mapping = aes(x = Age, y = lx, color = Year, group = Year)) + 
+  scale_color_continuous(type = "viridis") + 
+  ggtitle("Survival Function, Denmark (Female)") + 
+  theme(legend.position = "none") + 
+  geom_text(data = LTf[LTf$Age == 65,], aes(label = Year, x = Age, y = lx + 3000, color = Year))
+```
+
+```{r}
+ggplot(data = LTb) + 
+  geom_line(mapping = aes(x = Age, y = lx, color = Year, group = Year)) + 
+  scale_color_continuous(type = "viridis") + 
+  ggtitle("Survival Function, Denmark") + 
+  theme(legend.position = "none") + 
+  geom_text(data = LTb[LTb$Age == 65,], aes(label = Year, x = Age, y = lx + 3000, color = Year))
+```
+
+```{r}
+ggplot(data = LTm) + 
+  geom_line(mapping = aes(x = Age, y = lx, color = Year, group = Year)) + 
+  scale_color_continuous(type = "viridis") + 
+  ggtitle("Survival Function, Denmark (Male)") + 
+  theme(legend.position = "none") + 
+  geom_text(data = LTm[LTm$Age == 65,], aes(label = Year, x = Age, y = lx + 3000, color = Year))
+```
+
+## Distribution of Deaths
+
+```{r}
+ggplot()+
+  geom_line(LTm, mapping = aes(x=Age,y=qx, color = Year, group = Year))+
+  scale_y_continuous(trans = "log10")+
+  labs(x = "Age",y="qx")+theme_bw() + 
+  theme(legend.position = "none") + 
+  scale_color_continuous(type = "viridis") +
+  geom_text(data = LTm[LTm$Age == 10,], aes(label = Year, x = Age, y = qx, color = Year)) + 
+  ggtitle("Distribution of Deaths, Denmark (Male)")
+```
+
+```{r}
+ggplot()+
+  geom_line(LTf, mapping = aes(x=Age,y=qx, color = Year, group = Year))+
+  scale_y_continuous(trans = "log10")+
+  labs(x = "Age",y="qx")+theme_bw() + 
+  theme(legend.position = "none") + 
+  scale_color_continuous(type = "viridis") +
+  geom_text(data = LTf[LTf$Age == 5,], aes(label = Year, x = Age, y = qx, color = Year)) + 
+  ggtitle("Distribution of Deaths, Denmark (Female)")
+```
+
+```{r}
+ggplot()+
+  geom_line(LTb, mapping = aes(x=Age,y=qx, color = Year, group = Year))+
+  scale_y_continuous(trans = "log10")+
+  labs(x = "Age",y="qx")+theme_bw() + 
+  theme(legend.position = "none") + 
+  scale_color_continuous(type = "viridis") +
+  geom_text(data = LTb[LTb$Age == 8,], aes(label = Year, x = Age, y = qx, color = Year)) + 
+  ggtitle("Distribution of Deaths, Denmark")
 ```
