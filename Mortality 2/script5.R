@@ -150,12 +150,13 @@ library(ggplot2)
 
 ggplot() + 
   geom_line(data = LT_p[LT_p$Age == 0,], mapping = aes(x = Year, y = ex, color = "0")) + 
-  geom_line(data = LT_p[LT_p$Age == 30,], mapping = aes(x = Year, y = ex + 30, color = "30")) + 
-  geom_line(data = LT_p[LT_p$Age == 80,], mapping = aes(x = Year, y = ex + 80, color = "80")) + 
+  geom_line(data = LT_p[LT_p$Age == 30,], mapping = aes(x = Year, y = ex, color = "30")) + 
+  geom_line(data = LT_p[LT_p$Age == 80,], mapping = aes(x = Year, y = ex, color = "80")) + 
   labs(colour = "Age") + 
-  ggtitle("Comparison of Life Expectancy across ages")
+  ggtitle("Comparison of Expected Remaining Years Across Ages")
 
 ggplot() + 
   geom_line(data = LT_p[LT_p$Age == 0,], mapping = aes(x = Year, y = ex, color = "Period")) + 
   geom_line(data = LT_c[LT_c$Age == 0,], mapping = aes(x = Year, y = ex, color = "Cohort")) + 
   labs(colour = "Legend") + ggtitle("Life Expectancy at birth, Period Vs. Cohort")
+
