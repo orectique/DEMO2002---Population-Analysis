@@ -1,0 +1,73 @@
+STATE (5YR),STATE (UR), Count
+New South Wales,New South Wales,6438401
+New South Wales,Victoria,68685
+New South Wales,Queensland,137386
+New South Wales,South Australia,16994
+New South Wales,Western Australia,19370
+New South Wales,Tasmania,14035
+New South Wales,Northern Territory,6622
+New South Wales,Australian Capital Territory,35086
+Victoria,New South Wales,56671
+Victoria,Victoria,5195053
+Victoria,Queensland,67487
+Victoria,South Australia,18113
+Victoria,Western Australia,17779
+Victoria,Tasmania,13266
+Victoria,Northern Territory,6672
+Victoria,Australian Capital Territory,9105
+Queensland,New South Wales,70394
+Queensland,Victoria,43045
+Queensland,Queensland,3983906
+Queensland,South Australia,11705
+Queensland,Western Australia,17624
+Queensland,Tasmania,9955
+Queensland,Northern Territory,7590
+Queensland,Australian Capital Territory,8587
+South Australia,New South Wales,12971
+South Australia,Victoria,20535
+South Australia,Queensland,17036
+South Australia,South Australia,1448852
+South Australia,Western Australia,5989
+South Australia,Tasmania,1665
+South Australia,Northern Territory,3195
+South Australia,Australian Capital Territory,2537
+Western Australia,New South Wales,18564
+Western Australia,Victoria,22541
+Western Australia,Queensland,20771
+Western Australia,South Australia,5977
+Western Australia,Western Australia,2120238
+Western Australia,Tasmania,3400
+Western Australia,Northern Territory,3889
+Western Australia,Australian Capital Territory,2794
+Tasmania,New South Wales,4580
+Tasmania,Victoria,9083
+Tasmania,Queensland,9100
+Tasmania,South Australia,1904
+Tasmania,Western Australia,2938
+Tasmania,Tasmania,429530
+Tasmania,Northern Territory,543
+Tasmania,Australian Capital Territory,773
+Northern Territory,New South Wales,6675
+Northern Territory,Victoria,7755
+Northern Territory,Queensland,14687
+Northern Territory,South Australia,5690
+Northern Territory,Western Australia,5637
+Northern Territory,Tasmania,1025
+Northern Territory,Northern Territory,148328
+Northern Territory,Australian Capital Territory,1269
+Australian Capital Territory,New South Wales,26099
+Australian Capital Territory,Victoria,7964
+Australian Capital Territory,Queensland,10061
+Australian Capital Territory,South Australia,1899
+Australian Capital Territory,Western Australia,1842
+Australian Capital Territory,Tasmania,914
+Australian Capital Territory,Northern Territory,783
+Australian Capital Territory,Australian Capital Territory,316781
+Total,New South Wales,6634350
+Total,Victoria,5374654
+Total,Queensland,4260431
+Total,South Australia,1511132
+Total,Western Australia,2191417
+Total,Tasmania,473784
+Total,Northern Territory,177637
+Total,Australian Capital Territory,376944

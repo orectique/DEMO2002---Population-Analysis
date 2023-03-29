@@ -109,8 +109,8 @@ ggplot(data = Nord) +
   geom_line(data = DNK, mapping = aes(x = Year, y = Male, color = "Denmark (Male)")) + 
   geom_line(data = Nord, mapping = aes(x = Year, y = MaleAvg, color = "Nordic Average (Male)")) + 
   geom_line(data = Nord, mapping = aes(x = Year, y = Avg, color = "Nordic Average (Complete)")) + 
-  labs(colour = "Region") + theme_bw() + 
-  ggtitle("Life Expectancy at Birth, Period Data (1878 - 2020)")
+  labs(colour = "Region") + theme_bw() + ylab("Years") + 
+  ggtitle("Life Expectancy at Birth - Male, Period Data (1878 - 2020)")
 ```
 
 ```{r}
@@ -118,8 +118,8 @@ ggplot() +
   geom_line(data = DNK, mapping = aes(x = Year, y = Female, color = "Denmark (Female)")) + 
   geom_line(data = Nord, mapping = aes(x = Year, y = FemaleAvg, color = "Nordic Average (Female)")) + 
   geom_line(data = Nord, mapping = aes(x = Year, y = Avg, color = "Nordic Average (Complete)")) + 
-  labs(colour = "Region") + theme_bw() + 
-  ggtitle("Life Expectancy at Birth, Period Data (1878 - 2020)")
+  labs(colour = "Region") + theme_bw() + ylab("Years") + 
+  ggtitle("Life Expectancy at Birth - Female, Period Data (1878 - 2020)")
 ```
 
 ## Difference in Male - Female life expectancy at birth
@@ -249,7 +249,7 @@ ggplot()+
   labs(x = "Age",y="qx")+theme_bw() + 
   theme(legend.position = "none") + 
   scale_color_continuous(type = "viridis") +
-  geom_text(data = LTm[LTm$Age == 10,], aes(label = Year, x = Age, y = qx, color = Year)) + 
+  geom_text(data = LTm[LTm$Age == 10,], aes(label = Year, x = Age, y = qx, color = Year)) + ylab("Probability of Death") + 
   ggtitle("Distribution of Deaths, Denmark (Male)")
 ```
 
@@ -260,7 +260,7 @@ ggplot()+
   labs(x = "Age",y="qx")+theme_bw() + 
   theme(legend.position = "none") + 
   scale_color_continuous(type = "viridis") +
-  geom_text(data = LTf[LTf$Age == 5,], aes(label = Year, x = Age, y = qx, color = Year)) + 
+  geom_text(data = LTf[LTf$Age == 5,], aes(label = Year, x = Age, y = qx, color = Year)) + ylab("Probability of Death") + 
   ggtitle("Distribution of Deaths, Denmark (Female)")
 ```
 
