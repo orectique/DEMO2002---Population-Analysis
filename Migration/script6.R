@@ -71,6 +71,8 @@ chordDiagram(x = df1, transparency = 0.01, directional = 1)
 ## Step 2: Change colors
 #my.color = c("#F0E442", "#0072B2", "#D55E00","#CC79A7", "#999999", "#E69F00", "#56B4E9", "#009E73")
 
+my.color = c("#504746", "#43BCCD", "#BFADA3","#CC79A7", "#FBB7C0", "#B6244F", "#E3DC95", "#009E73")
+
 chordDiagram(x = df1, #grid.col = my.color
              )
 
@@ -122,15 +124,15 @@ title(main = "Five-year interstate migration flows (in thousand), Australia, 201
 
 ##   Save the figure?
 
-jpeg("./chordDiagramMigration.jpg")
+#jpeg("./chordDiagramMigration.jpg")
 
-chordDiagram(x =df1, #grid.col = my.color, 
-             transparency = 0.05,
+chordDiagram(x =df1, grid.col = my.color, 
+             transparency = 0.005,
              directional = 1, 
              direction.type = c("arrows", "diffHeight"), 
              diffHeight  = -0.04,
              link.arr.type = "big.arrow", 
-             link.sort = TRUE, link.largest.ontop = TRUE)
+             link.sort = TRUE, link.largest.ontop = FALSE)
 
 title(main = "Five-year interstate migration flows (in thousand), Australia, 2016-21
       (source: 2021 Australian Census)",
@@ -138,5 +140,5 @@ title(main = "Five-year interstate migration flows (in thousand), Australia, 201
       font.main= 2, 
       col.main= "black",line = -0.65)
 
-dev.off()
+#dev.off()
 

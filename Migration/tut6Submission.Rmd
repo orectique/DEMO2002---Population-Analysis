@@ -1,0 +1,13 @@
+---
+title: "DEMO2002 - Tutorial 6"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+![2016-2021 Interstate Migration Flows](chordDiagramMigration2.jpg)
+```{r}
+
+```
+
+The above plot displays the migration trends from each state to the other. It is observed that the largest group of migrants move from New South Wales to Queensland. NSW has the largest net emigrants, with Victoria and Queensland following it. It is also observed that more people immigrated to Tasmania than emigrated from there.
