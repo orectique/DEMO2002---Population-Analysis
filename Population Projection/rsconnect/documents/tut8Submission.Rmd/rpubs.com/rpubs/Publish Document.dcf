@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/1037208/5d6e308fb84b4fadaa48c91c95356733
+bundleId: https://api.rpubs.com/api/v1/document/1037208/5d6e308fb84b4fadaa48c91c95356733
+url: http://rpubs.com/Orectique/1037208
+when: 1683090893.26144
+lastSyncTime: 1683090893.26144

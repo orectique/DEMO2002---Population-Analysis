@@ -15,13 +15,13 @@ library(ggplot2) # for data visualization
 ## Save the "Population.txt" file in your working directory
 
 ## Specify which country you choose to plot
-Names<-c("Australia")
+Names<-c("Finland")
 
 ## 2. PREPARE DATA ####
 
 # Or, if you read data from the txt file
 
-Pop <-read.table('Population.txt', skip = 2, fill = T, header = T) 
+Pop <-read.table('FinPopulation.txt', skip = 2, fill = T, header = T) 
   
   str(Pop)
   unique(Pop$Age)
@@ -121,7 +121,7 @@ Pop <-read.table('Population.txt', skip = 2, fill = T, header = T)
   p 
   
   ggsave(paste0("population pyramid_",Names,"_","comp",".png"),
-         width=20, height=8,units="cm")
+         width=23, height=8,units="cm")
   
   ## Present it with a gif ###
   
@@ -156,4 +156,5 @@ Pop <-read.table('Population.txt', skip = 2, fill = T, header = T)
   anim_save(paste0("population pyramid_",Names,"_",
                    min(Pop_total$Year),"_",max(Pop_total$Year),
                    ".gif"))
+  
   

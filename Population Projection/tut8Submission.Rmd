@@ -1,0 +1,20 @@
+---
+title: "DEMO2002 - Tutorial 8"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+A version with the GIF has been published at <https://rpubs.com/Orectique/1037208>
+
+![Population Projection - USA 2025](population%20pyramid_USA_Fshock.png)
+
+The above graphic presents a counterfactual where the survival rate of 23 year old women is hit by a large shock. In the new scenario, 23 year old women have a survival rate of 40%. There is no other deviation from the baseline scenario discussed in the lecture/tutorial.
+
+As the number of number of babies born is dependent on the size of the fertile female population, we see an immediate drop in the size of the total population. Though there is no impact on the existing male population, it is observed that the male population is predominantly aging.
+
+![Population Projection - USA 2025](population%20pyramid_USA_Mshock.png)
+
+In a similar scenario where 23 year old males were given a survival rate of 40% (simulating a war where young men are enlisted), the female population and the birth rates were seen to be generally unaffected. This is unsurprising given that the model used here does not account for the role of male-female partnership on fertility rates, i.e. the ASFR used in the Leslie matrix is not dependent on the male population.
