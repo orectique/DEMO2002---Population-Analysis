@@ -13,11 +13,11 @@ Proj <- 100
 
 #### Population and Births ####
 
-Pop<-read.table("Population.txt", skip =2, header = T) # population
+Pop<-read.table("../Population Projection/Population.txt", skip =2, header = T) # population
 
 #### Leslie matrix ####
 
-Mf<-as.matrix(read.csv("Leslie_Matrix_Female_Shock.csv")[,-1])
+Mf<-as.matrix(read.csv("Leslie_Matrix_Female.csv")[,-1])
 
 Mm<-as.matrix(read.csv("Leslie_Matrix_Male.csv")[,-1])
 
