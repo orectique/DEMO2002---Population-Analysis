@@ -69,7 +69,7 @@ L1m = lm$Lx[1]/(2 * lm$lx[1])
 ### Here you need to complete this yourself.
 k = L1/(1 + SRB)# this is for female babies
 
-km = L1m*SRB/(1 + SRB)# for estimating male babies
+km = (L1m*SRB)/(1 + SRB)# for estimating male babies
 
 line1 = (Fe[-1]*Sx + Fe[-111])# this is for female survivor and baby survivors
 
@@ -77,9 +77,9 @@ line1 = (Fe[-1]*Sx + Fe[-111])# this is for female survivor and baby survivors
 
 ### Here you need to complete this yourself.
 
-Mf = cbind(rbind(line1, diag(Sx)), c(rep(1, 110), L111))
+Mf = cbind(rbind(line1, diag(Sx)), c(rep(0, 110), L111))
 
-Mm = cbind(rbind(rep(0, length(line1)), diag(Sxm)), c(rep(1, 110), L111m))
+Mm = cbind(rbind(rep(0, length(line1)), diag(Sxm)), c(rep(0, 110), L111m))
 
 #### Population ####
 
@@ -201,7 +201,7 @@ for (year in unique(Proj_Pop$Year)){
 library(gganimate)
 library(gifski)
 
-p1 <- ggplot(Pop_total, aes(x = Age,  y = Percentage, fill = Sex)) +
+p1 <- ggplot(Pop1, aes(x = Age,  y = Percentage, fill = Sex)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = function(x){paste0(x,"%")}, 
                      limits = max(abs(Pop_total$Percentage)) * c(-1.1,1.1)) +
