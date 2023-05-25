@@ -7,10 +7,10 @@ library(ggplot2)
 
 #### Parameters ####
 
-Names<-c("USA")
-Names2<-c("United States of America")
+Names<-c("AUS")
+Names2<-c("Australia")
 
-YEAR<-2018
+YEAR<-1975
 
 #### Mortality ####
 
@@ -44,13 +44,15 @@ Sxm[110]<-L111m
 
 #### Fertility and Births ####
 
-f0<-read.table("USAasfrRR.txt",
-               header=TRUE,fill=TRUE,skip=2) #period asfr by year and age (Lexis squares) for all countries
+f<-read.table("AUSfertilityRates1975.txt",
+               header=TRUE,fill=TRUE) #period asfr by year and age (Lexis squares) for all countries
 
-f<-f0[f0$Year==YEAR,]  
+#f<-f0[f0$Year==YEAR,]  
+
+f$ASFR <- 0.8 * f$ASFR
 
 ### Here you need to complete this yourself.
-Fe<-c(rep(0, 12), f$ASFR, rep(0, (110-55)))
+Fe<-c(rep(0, 15), f$ASFR, rep(0, (110-49)))
 
 ### line1: a combination of fertility and survival information
 ### for the first row of the matrix which returns the number 
@@ -169,7 +171,12 @@ for (year in 2:Proj){
   Proj_Pop <- rbind(Proj_Pop, Proj_Pop_temp)
 }
 
+Pop1 <- Proj_Pop[Proj_Pop$Year == 2020, ]
 
+sum(Pop1$Male)
+sum(Pop1$Female)
+
+break
 
 #### Plot the results as a pop pyramid ####
 
@@ -198,7 +205,8 @@ for (year in unique(Proj_Pop$Year)){
   Pop_total <- rbind(Pop_total, Pop1)
 }
 
-ggplot(Pop_total[Pop_total$Year %in% c(2021, 2051, 2081),],
+
+ggplot(Pop_total[Pop_total$Year == 2020,],
        aes(x = Age,  y = Percentage, fill = Sex))+
   geom_bar(stat = "identity")+
   facet_wrap(~Year,ncol=3)+
@@ -206,38 +214,9 @@ ggplot(Pop_total[Pop_total$Year %in% c(2021, 2051, 2081),],
                      limits = max(Pop_total$Percentage) * c(-1.1,1.1)) +
   scale_x_continuous(n.breaks = 10)+
   labs(x = "Age", y = "Percentage of Population",
-       title = paste("Population pyramid of",Names),
+       title = paste("Population Pyramid of Australia, Adjusted ASFR"),
        caption = "Data source: HMD")+
   coord_flip()+ # flip x and y axis
   scale_fill_brewer(palette= "Set1")+
   theme_minimal()
 
-library(gganimate)
-library(gifski)
-
-p1 <- ggplot(Pop1, aes(x = Age,  y = Percentage, fill = Sex)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = function(x){paste0(x,"%")}, 
-                     limits = max(abs(Pop_total$Percentage)) * c(-1.1,1.1)) +
-  labs(x = "Age", y = "Percentage of Population",
-       title = paste("Population pyramid of",Names),
-       subtitle = "{closest_state}",
-       caption = "Data source: HMD")+
-  coord_flip()+
-  scale_fill_brewer(palette= "Set1")+
-  theme_minimal()
-
-p2 <- p1 + transition_states(Year, transition_length = 2) + 
-  enter_fade() +
-  exit_fade() + 
-  ease_aes("cubic-in-out")
-
-# Generate gif (this will take a few minutes to run)
-animate(p2,width = 10, height = 10, units = "cm",res=150, 
-        renderer = gifski_renderer(loop = FALSE), 
-        nframes= length(unique(Pop_total$Year))*2)
-
-# save the gif file 
-anim_save(paste0("population pyramid_Mshocked_",Names,"_",
-                 min(Pop_total$Year),"_",max(Pop_total$Year),
-                 ".gif"))

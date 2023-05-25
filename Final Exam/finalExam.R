@@ -1,16 +1,93 @@
+marriage <- read.table("Marriage.txt", skip = 1, header = T, sep = ',')
 
-## R tutorial 9 - Population projection
-## DEMO2002 
-## 2023
+marriage$Mid.points <- c(17.5, 22, 27, 32, 37, 42, 47, 75)
+
+MAm.Female <- marriage$Females %*% marriage$Mid.points / sum(marriage$Females)
+
+MA.m.FemaleSS <- marriage$Same.sex.females %*% marriage$Mid.points / sum(marriage$Same.sex.females)
+
+MA.m.Male <- marriage$Males %*% marriage$Mid.points / sum(marriage$Males)
+
+MA.m.MaleSS <- marriage$Same.sex.males %*% marriage$Mid.points / sum(marriage$Same.sex.males)
+
+marriage[c("Age.group", "Mid.points")]
+
+mig <- read.table('femalesNSW2018.txt', header = T)
+
+mig$joint <- mig$NSW.to.RAU + mig$Mx
+
+LifeTableMx<-function(mx,sex){
+  
+  N<-length(mx)
+  
+  ax<-rep(0.5,N) #this 
+  
+  if(sex=="m"){
+    ax[1]<-ifelse(mx[1]<0.107,0.045+mx[1]*2.684,0.330)}
+  if(sex=="f"){
+    ax[1]<-ifelse(mx[1]<0.107,0.053+2.800*mx[1],0.350)
+  }
+  
+  # We need the functions to calculate ex from qx
+  
+  qx <- mx/(1 + (1 - ax)*mx)
+  qx[N] <- 1
+  
+  px<-1-qx
+  
+  lx<-100000
+  
+  for(y in 1:(N-1)){          
+    
+    lx[y+1] <- lx[y]*px[y]
+  }
+  
+  dx <- lx*qx
+  
+  Lx <- lx[-1] + ax[-N]*dx[-N] 
+  
+  Lx[N]<-ifelse(mx[N]>0,lx[N]/mx[N],0)                  
+  
+  Tx<-c()
+  
+  for(y in 1:N){
+    # Calculate Tx
+    Tx[y] <- sum(Lx[y:N])
+  }
+  
+  ex <- Tx/lx 
+  
+  Age<-0:100              
+  ALL<-data.frame(Age,mx,lx,dx,Lx,Tx,ex)
+  return(ALL)
+}
+
+ltMx <- LifeTableMx(mig$Mx, 'f')
+
+ltJoint <- LifeTableMx(mig$joint, 'f')
 
 library(ggplot2)
 
-#### Parameters ####
+ggplot() + 
+  geom_line(aes(x = ltMx$Age, y = ltMx$Lx/100000, color = "Death")) + 
+  geom_line(aes(x = ltJoint$Age, y = ltJoint$Lx/100000, color = "Migration + Death")) + 
+  labs(x = "Age", y = "Survivors", title = "Survivorship (Death and Migration)", colour = "Measure") +
+  xlim(c(0, 99))
+
+ggplot() + 
+  geom_line(aes(x = ltMx$Age, y = ltMx$ex + ltMx$Age, color = "Death")) + 
+  geom_line(aes(x = ltJoint$Age, y = ltJoint$ex + ltJoint$Age, color = "Migration + Death")) + 
+  labs(x = "Age", y = "Number of Years", title = "Life Expectancy at Birth - NSW (Death and Migration)", colour = "Measure") +
+  xlim(c(0, 99))
+
+
+
+asfr <- read.table("AUSfertilityRates1975.txt", header = T)
 
 Names<-c("USA")
 Names2<-c("United States of America")
 
-YEAR<-2018
+YEAR<-1975
 
 #### Mortality ####
 
@@ -44,13 +121,8 @@ Sxm[110]<-L111m
 
 #### Fertility and Births ####
 
-f0<-read.table("USAasfrRR.txt",
-               header=TRUE,fill=TRUE,skip=2) #period asfr by year and age (Lexis squares) for all countries
-
-f<-f0[f0$Year==YEAR,]  
-
 ### Here you need to complete this yourself.
-Fe<-c(rep(0, 12), f$ASFR, rep(0, (110-55)))
+Fe<-c(rep(0, 15), asfr$ASFR, rep(0, (110-49)))
 
 ### line1: a combination of fertility and survival information
 ### for the first row of the matrix which returns the number 
@@ -65,7 +137,7 @@ SRB = B$Male/B$Female
 ### Here you need to complete this yourself.
 L1 = l$Lx[1]/(2 * l$lx[1])
 L1m = lm$Lx[1]/(2 * lm$lx[1])
- 
+
 ### Here you need to complete this yourself.
 k = L1/(1 + SRB)# this is for female babies
 
@@ -198,46 +270,5 @@ for (year in unique(Proj_Pop$Year)){
   Pop_total <- rbind(Pop_total, Pop1)
 }
 
-ggplot(Pop_total[Pop_total$Year %in% c(2021, 2051, 2081),],
-       aes(x = Age,  y = Percentage, fill = Sex))+
-  geom_bar(stat = "identity")+
-  facet_wrap(~Year,ncol=3)+
-  scale_y_continuous(labels = function(x){paste0(x,"%")}, 
-                     limits = max(Pop_total$Percentage) * c(-1.1,1.1)) +
-  scale_x_continuous(n.breaks = 10)+
-  labs(x = "Age", y = "Percentage of Population",
-       title = paste("Population pyramid of",Names),
-       caption = "Data source: HMD")+
-  coord_flip()+ # flip x and y axis
-  scale_fill_brewer(palette= "Set1")+
-  theme_minimal()
 
-library(gganimate)
-library(gifski)
 
-p1 <- ggplot(Pop1, aes(x = Age,  y = Percentage, fill = Sex)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = function(x){paste0(x,"%")}, 
-                     limits = max(abs(Pop_total$Percentage)) * c(-1.1,1.1)) +
-  labs(x = "Age", y = "Percentage of Population",
-       title = paste("Population pyramid of",Names),
-       subtitle = "{closest_state}",
-       caption = "Data source: HMD")+
-  coord_flip()+
-  scale_fill_brewer(palette= "Set1")+
-  theme_minimal()
-
-p2 <- p1 + transition_states(Year, transition_length = 2) + 
-  enter_fade() +
-  exit_fade() + 
-  ease_aes("cubic-in-out")
-
-# Generate gif (this will take a few minutes to run)
-animate(p2,width = 10, height = 10, units = "cm",res=150, 
-        renderer = gifski_renderer(loop = FALSE), 
-        nframes= length(unique(Pop_total$Year))*2)
-
-# save the gif file 
-anim_save(paste0("population pyramid_Mshocked_",Names,"_",
-                 min(Pop_total$Year),"_",max(Pop_total$Year),
-                 ".gif"))
